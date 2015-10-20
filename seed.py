@@ -48,15 +48,19 @@ def load_movies():
     for row in open("seed_data/u.item"):
         row = row.rstrip()
         row_splitted = row.split("|")
+        ##throwing out rows with no release date or title is unknown
+        
         movie_id = row_splitted[0]
         title = row_splitted[1]
         released_at = row_splitted[2]
         imdb_url = row_splitted[4]
-        print imdb_url, movie_id
-
+        
         title_noyear = title.rstrip("(")
-
-        released_at_ob = datetime.strptime(released_at, '%d-%b-%Y')
+        if released_at != (''):
+            released_at_ob = datetime.strptime(released_at, '%d-%b-%Y')
+        else:
+            pass
+    
 
         movie = Movie(movie_id=movie_id,
                     title=title_noyear,
@@ -81,10 +85,13 @@ def load_ratings():
     # Read u.user file and insert data
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        rating_id, movie_id, user_id, score = row.split("|")
+        print row
+        row_splitted=row.split()
+        user_id = row_splitted[0]
+        movie_id = row_splitted[1]
+        score = row_splitted[2]
 
-        rating = Rating(rating_id=rating_id,
-                    movie_id=movie_id,
+        rating = Rating(movie_id=movie_id,
                     user_id=user_id,
                     score=score)
 

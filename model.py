@@ -28,26 +28,38 @@ class User(db.Model):
 
         return "<User user_id=%s email=%s>" % (self.user_id, self.email)
 
+
 class Movie(db.Model):
     """ movie data"""
-    __tablename__= "Movies"
+
+    __tablename__= "movies"
 
     movie_id = db.Column(db.Integer, primary_key=True, nullable=False, unique = True)
     title = db.Column(db.String(50), nullable=False)
     released_at = db.Column(db.DateTime)
-    imbd_url = db.Column(db.String(100))
+    imdb_url = db.Column(db.String(100))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<User movie_id=%s title=%s>" % (self.movie_id, self.title)
+
 
 class Rating(db.Model):
     """movie ratings"""
 
-    __tablename__= "Ratings"
+    __tablename__= "ratings"
 
     rating_id = db.Column(db.Integer, primary_key=True, nullable=False, unique = True)
     movie_id = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, nullable= False)
     score = db.Column(db.Integer, nullable=False)
 
-    
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<User rating_id=%s movie_id=%s user_id=%s>" % (self.rating_id, self.movie_id, self.user_id)
+
                 
 
 

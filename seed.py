@@ -55,7 +55,10 @@ def load_movies():
         released_at = row_splitted[2]
         imdb_url = row_splitted[4]
         
-        title_noyear = title.rstrip("(")
+
+        ## FIX LATER: optionally, rstrip('(') - why didn't it work?
+        title = title[:-7]
+        print title
         if released_at != (''):
             released_at_ob = datetime.strptime(released_at, '%d-%b-%Y')
         else:
@@ -63,7 +66,7 @@ def load_movies():
     
 
         movie = Movie(movie_id=movie_id,
-                    title=title_noyear,
+                    title=title,
                     released_at=released_at_ob,
                     imdb_url=imdb_url)
 
@@ -85,7 +88,6 @@ def load_ratings():
     # Read u.user file and insert data
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        print row
         row_splitted=row.split()
         user_id = row_splitted[0]
         movie_id = row_splitted[1]

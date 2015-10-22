@@ -30,7 +30,21 @@ def user_list():
     """Show list of users."""
 
     users = User.query.all()
+
     return render_template("user_list.html", users=users)
+
+@app.route("/users/<int:user_id>")
+def user_info(user_id):
+    """ displaying user user info"""
+
+    user_info = Rating.query.filter_by(user_id=user_id).all()
+    print user_info
+    user_id_info = User.query.filter(user_id == user_id).first()
+    score = user_id_info.ratings
+    print score
+
+    return render_template("user.html", user_email = user_id_info.email, user_zip = user_id_info.zipcode)
+    # return redirect("/")    
 
 
 @app.route("/register", methods = ['GET'])
@@ -73,37 +87,24 @@ def get_sign_in_data():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    logged_in_user=User.query.filter(email==email, password==password).one()
-    print logged_in_user
-
-    if email == logged_in_user.email and password == logged_in_user.password:
-        flash("user logged in")
-        return redirect("") #FIX ME!!
+    logged_in_user=User.query.filter_by(email=email, password=password).one()
+    if logged_in_user:
+        message = email + " logged in"
+        flash(message)
+        session['logged_in_user']=email
+        return redirect("/") #FIX ME!!
     else:
-        flash("wrong password or user not found")
+        message = "wrong password or user not found"
+        flash(message)
         return redirect("/sign_in")
 
 @app.route("/sign_out")
 def sign_out():
     """ signs out user and redirects to homepage"""
+    # if session['logged_in_user']: ##FIXME if user isnt signed in, dont try to sign out/delete session
+    del session['logged_in_user']
 
-
-
-
-
-
-
-
-
-    # # exists = None
-    # if request.form('username'): #is in db:
-    #     if request.form('password') == #id equal to username[password]
-    #     else:
-    #         flash("WRONG PASSWORD!")
-    # else:
-    #     flash("USER NOT FOUND. PLEASE REGISTER!")
-    #     return render_template("/sign_in.html")
-    # return redirect("/")
+    return redirect("/")
 
 
 @app.route("/logged_in")

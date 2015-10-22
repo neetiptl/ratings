@@ -32,11 +32,88 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
-@app.route("/log_in")
-def logged_in_user():
-    """logs in existing users"""
 
-    return render_template("log_in.html")
+@app.route("/register", methods = ['GET'])
+def registration_form():
+    """Display empty registration form"""
+
+    return render_template("registration_form.html")
+
+
+
+@app.route("/register", methods=['POST'])
+def get_registration_data():
+    """Collecting user entered data."""
+
+    password = request.form.get('password')
+    email = request.form.get('email')
+    age = request.form.get('age')
+    zipcode = request.form.get('zipcode')
+    print email
+    ##FIXME -make sure email isn't already in users
+    current_user = User(password=password, age=age,email=email,zipcode=zipcode)
+    db.session.add(current_user)
+
+    db.session.commit()    
+
+    return redirect("/")
+
+
+@app.route("/sign_in")
+def sign_in_form():
+    """show sign in form to user"""
+
+    return render_template("sign_in.html")
+
+
+@app.route("/sign_in", methods=['POST'])
+def get_sign_in_data():
+    """collecting existing users login"""
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    logged_in_user=User.query.filter(email==email, password==password).one()
+    print logged_in_user
+
+    if email == logged_in_user.email and password == logged_in_user.password:
+        flash("user logged in")
+        return redirect("") #FIX ME!!
+    else:
+        flash("wrong password or user not found")
+        return redirect("/sign_in")
+
+@app.route("/sign_out")
+def sign_out():
+    """ signs out user and redirects to homepage"""
+
+
+
+
+
+
+
+
+
+    # # exists = None
+    # if request.form('username'): #is in db:
+    #     if request.form('password') == #id equal to username[password]
+    #     else:
+    #         flash("WRONG PASSWORD!")
+    # else:
+    #     flash("USER NOT FOUND. PLEASE REGISTER!")
+    #     return render_template("/sign_in.html")
+    # return redirect("/")
+
+
+@app.route("/logged_in")
+def logged_in_user():
+    """Allows logged in user to return to the home page"""
+
+    username = session.get('username')
+    password = session.get('password')
+    flash
+    return render_template('logged_in_user.html', username=username, password=password)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

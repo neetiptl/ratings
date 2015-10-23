@@ -23,6 +23,8 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
 
+    # ratings = db.relationship("Rating", order_by = rating_id)
+
     def __repr__(self):
         """Provide helpful representation when printed."""
 
@@ -42,7 +44,7 @@ class Movie(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<User movie_id=%s title=%s>" % (self.movie_id, self.title)
+        return "<Movie movie_id=%s title=%s>" % (self.movie_id, self.title)
 
 
 class Rating(db.Model):
@@ -61,10 +63,13 @@ class Rating(db.Model):
     movie = db.relationship("Movie", backref=db.backref("ratings", order_by = rating_id))
 
 
+    # user = db.relationship("User")
+
+
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<User rating_id=%s movie_id=%s user_id=%s>" % (self.rating_id, self.movie_id, self.user_id)
+        return "<Rating rating_id=%s movie_id=%s user_id=%s>" % (self.rating_id, self.movie_id, self.user_id)
 
                 
 

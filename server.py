@@ -33,18 +33,30 @@ def user_list():
 
     return render_template("user_list.html", users=users)
 
-@app.route("/users/<int:user_id>")
+@app.route("/users/<int:user_id>") # how to use backref
 def user_info(user_id):
     """ displaying user user info"""
 
-    user_info = Rating.query.filter_by(user_id=user_id).all()
-    print user_info
-    user_id_info = User.query.filter(user_id == user_id).first()
-    score = user_id_info.ratings
-    print score
+    user = User.query.get(user_id)
+    print user
 
-    return render_template("user.html", user_email = user_id_info.email, user_zip = user_id_info.zipcode)
-    # return redirect("/")    
+    for rating in user.ratings:
+        print rating.movie
+
+
+
+
+    # test = Rating.query.filter(Rating.user.user_id==user_id).all()
+    # print test
+
+    # # user_info = Rating.query.filter_by(user_id=user_id).all()
+    # print user_info
+    # user_id_info = User.query.filter(user_id == user_id).first()
+    # score = user_id_info.ratings
+    # print score
+
+    # return render_template("user.html", user_email = user_id_info.email, user_zip = user_id_info.zipcode)
+    return redirect("/")    
 
 
 @app.route("/register", methods = ['GET'])
